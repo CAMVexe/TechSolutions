@@ -1,52 +1,9 @@
-﻿@model IEnumerable<TechSolutions.Models.Producto>
-@{
-    ViewData["Title"] = "Inventario de Productos";
+﻿@{
+    ViewData["Title"] = "Home Page";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-@if (TempData["Mensaje"] != null)
-{
-    <div class='alert alert-@TempData["Tipo"]'>
-        @TempData["Mensaje"]
-    </div>
-}
-
-
-<form method="get" asp-action="Index" class="mb-3">
-    <input type="text" name="searchString" placeholder="Buscar producto por nombre..." class="form-control" value="@Context.Request.Query["searchString"]" />
-    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
-    <a asp-action="Index" class="btn btn-secondary mt-2">Mostrar todos</a>
-</form>
-
-<a asp-action="Create" class="btn btn-success mb-3">Agregar Producto</a>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID Producto</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.IdProd</td>
-                <td>@item.Nombre</td>
-                <td>@item.Precio</td>
-                <td>@item.Stock</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdProd" class="btn btn-warning btn-sm">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@item.IdProd" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Estadisticas" class="btn btn-info">Ver Estadísticas</a>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
 

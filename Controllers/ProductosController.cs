@@ -15,6 +15,11 @@ namespace TechSolutions.Controllers
             _context = context;
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Index(string searchString)
         {
             var productos = from p in _context.Productos select p;

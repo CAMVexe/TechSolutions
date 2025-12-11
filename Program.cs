@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TechSolutions.Models;
+
 namespace TechSolutions
 {
     public class Program
@@ -8,6 +11,11 @@ namespace TechSolutions
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Registrar el DbContext en el contenedor DI
+            builder.Services.AddDbContext<TechSolutionsContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TechSolutionsContext")));
+
 
             var app = builder.Build();
 

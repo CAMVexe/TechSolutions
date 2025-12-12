@@ -29,3 +29,239 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+:root {
+  --tech-bg: #0f1724;
+  --panel: #0b1220;
+  --accent: #00d1ff;
+  --muted: #9aa7b2;
+  --card-radius: 0.6rem;
+  --high-contrast-text: #ffffff;    /* aumentado a blanco puro para máxima legibilidad */
+  --muted-contrast: #b9d9df;
+  --footer-text: #cfeff6;
+  --placeholder: #cfeff6;           /* color visible para placeholders */
+  --table-row-odd: rgba(255,255,255,0.02);
+  --table-row-hover: rgba(0,210,255,0.06);
+}
+
+/* Base */
+body {
+  background: linear-gradient(180deg, var(--tech-bg) 0%, #07101a 100%);
+  color: var(--high-contrast-text);
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  color: var(--accent) !important;
+  letter-spacing: 0.2px;
+}
+
+.navbar {
+  background: linear-gradient(90deg, rgba(6, 10, 16, 0.85), rgba(10, 18, 28, 0.85));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Aumentar contraste de los enlaces del header (nav links) */
+.navbar .nav-link {
+  color: var(--high-contrast-text) !important;
+  font-weight: 600;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: var(--accent) !important;
+  text-decoration: none;
+}
+
+/* Cards */
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-radius: var(--card-radius);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.card-title {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), #3be3ff);
+  border: none;
+  color: #07202a;
+  font-weight: 600;
+}
+
+.btn-success {
+  background: #00c26a;
+  border: none;
+  color: white;
+}
+
+.btn-outline-warning {
+  border-color: rgba(255, 190, 0, 0.16);
+  color: #ffd68a;
+}
+
+.btn-outline-danger {
+  border-color: rgba(255, 80, 80, 0.12);
+  color: #ffb3b3;
+}
+
+/* Table style */
+.table-tech {
+  background: transparent;
+  color: var(--high-contrast-text);
+}
+
+/* Cabecera de tabla: acento y peso */
+.table-tech thead th {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.04);
+  color: var(--accent);
+  font-weight: 700;
+  background: rgba(255,255,255,0.01);
+}
+
+/* Filas alternadas para mejorar contraste y legibilidad */
+.table-tech tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  background: transparent;
+}
+.table-tech tbody tr:nth-child(odd) {
+  background: var(--table-row-odd);
+}
+
+/* Hover claro para filas */
+.table-tech tbody tr:hover {
+  background: var(--table-row-hover);
+}
+
+/* Datos de la tabla: blanco puro y mayor peso */
+.table-tech td,
+.table-tech tbody td {
+  vertical-align: middle;
+  color: var(--high-contrast-text);
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35); /* sutil mejora de contraste en algunos displays */
+}
+
+/* Si hay enlaces dentro de la tabla */
+.table-tech a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.table-tech a:hover {
+  color: #7ef0ff;
+}
+
+/* Forms: placeholders visibles */
+.form-control {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--high-contrast-text);
+  height: calc(2.25rem + 6px);
+}
+
+/* Placeholder rules (varias pseudo-clases para compatibilidad) */
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1; /* asegurar visibilidad */
+}
+.form-control:-ms-input-placeholder { color: var(--placeholder); opacity:1; }
+.form-control:-ms-input-placeholder { color: var(--placeholder); opacity:1; }
+
+/* Alerts */
+.alert-info {
+  background: rgba(0, 210, 255, 0.07);
+  border: 1px solid rgba(0, 210, 255, 0.12);
+  color: var(--accent);
+}
+
+/* Utility */
+.lead {
+  color: var(--muted-contrast);
+}
+
+/* Footer: aumentar contraste del texto y enlaces */
+.footer,
+.footer a,
+footer .container {
+  color: var(--footer-text) !important;
+}
+
+.footer a {
+  color: var(--accent) !important;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+  color: #7ef0ff !important;
+}
+
+/* Icon color */
+.bi {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+  .navbar-collapse {
+    background: transparent !important;
+  }
+
+  .card {
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Sobrescribir estilos de Bootstrap solo para nuestras tablas de tema */
+.table.table-tech,
+.table-tech {
+  background: linear-gradient(180deg, rgba(11,18,32,0.98), rgba(6,10,16,0.95));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  color: var(--high-contrast-text);
+}
+
+/* Cabecera: sutil fondo oscuro y texto en acento */
+.table-tech thead th {
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--accent) !important;
+  font-weight: 800;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Filas: alternado tenue y hover más claro */
+.table-tech tbody tr {
+  background: transparent;
+}
+.table-tech.table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(255,255,255,0.02);
+}
+.table-tech tbody tr:hover {
+  background: rgba(0,210,255,0.06);
+}
+
+/* Celdas: texto blanco puro (legible) y sin efectos de bootstrap que lo estropeen */
+.table-tech td,
+.table-tech tbody td {
+  color: var(--high-contrast-text) !important;
+  font-weight: 600;
+}
+
+/* Evitar que Bootstrap aplique fondo blanco por defecto */
+.table.table-tech > :not(caption) > * > * {
+  background-color: transparent !important;
+}
+
+/* Si hubiera .table-striped aplicado por Bootstrap, forzar las filas del tbody */
+.table.table-tech.table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(255,255,255,0.02) !important;
+}

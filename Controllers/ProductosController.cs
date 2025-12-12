@@ -119,7 +119,7 @@ namespace TechSolutions.Controllers
 
         public IActionResult OrderP()
         {
-            var ordered = _context.Productos.OrderBy(p => p.Precio).ToList();
+            var ordered = _context.Productos.OrderByDescending(p => p.Precio).ToList();
             return View("Index", ordered);
         }
 

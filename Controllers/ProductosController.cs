@@ -133,7 +133,7 @@ namespace TechSolutions.Controllers
         public IActionResult ValInventario()
         {
             var totalValue = _context.Productos.Sum(p => p.Precio * p.Stock);
-            TempData["Mensaje"] = $"El valor total del inventario es de ₡ {totalValue:N2}";
+            TempData["Mensaje"] = $"El valor total del inventario es de ₡ {totalValue}";
             return RedirectToAction(nameof(Index));
         }
 

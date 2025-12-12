@@ -15,87 +15,138 @@ namespace TechSolutions.Controllers
             _context = context;
         }
 
+        public IActionResult Index()
+        {
+            var productos = _context.Productos.ToList();
+            return View(productos);
+        }
+
         public IActionResult Create()
         {
             return View();
         }
 
-        public async Task<IActionResult> Index(string searchString)
-        {
-            var productos = from p in _context.Productos select p;
-
-            if (!string.IsNullOrEmpty(searchString))
-                productos = productos.Where(p => p.Nombre != null && p.Nombre.Contains(searchString));
-
-            return View(await productos.ToListAsync());
-        }
-
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (string.IsNullOrEmpty(id)) return NotFound();
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null) return NotFound();
-            return View(producto);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("IdProd,Nombre,Precio,Stock")] Producto producto)
-        {
-            if (id != producto.IdProd) return NotFound();
 
-            if (ModelState.IsValid)
+        public IActionResult Create(Producto model)
+        {
+            if (!ModelState.IsValid)
             {
-                _context.Update(producto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            return View(producto);
-        }
+            _context.Productos.Add(model);
+            _context.SaveChanges();
 
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (string.IsNullOrEmpty(id)) return NotFound();
-            var producto = await _context.Productos.FirstOrDefaultAsync(p => p.IdProd == id);
-            if (producto == null) return NotFound();
-            return View(producto);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto != null)
-            {
-                _context.Productos.Remove(producto);
-                await _context.SaveChangesAsync();
-            }
+            TempData["Mensaje"] = $"Producto '{model.Nombre}' registrado correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Estadisticas()
+        public IActionResult BuscarProd(string nombre)
         {
-            var productos = await _context.Productos.ToListAsync();
+            var resultado = _context.Productos.Where(p => p.Nombre.Contains(nombre)).ToList();
 
-            ViewData["ProductosOrdenados"] = productos
-                .OrderByDescending(p => p.Precio ?? 0)
-                .ToList();
-            ViewData["PromedioPrecio"] = productos
-                .Where(p => p.Precio.HasValue)
-                .Average(p => p.Precio.Value);
-            ViewData["ValorInventario"] = productos
-                .Sum(p => (p.Precio ?? 0) * (p.Stock ?? 0));
-            ViewData["StockCritico"] = productos
-                .Where(p => (p.Stock ?? 0) < 5)
-                .ToList();
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                TempData["Mensaje"] = "Mostrando todos los productos, si desea buscar un producto en específico, ingrese el nombre";
+                return RedirectToAction(nameof(Index));
+            }
 
-            return View();
+            if (resultado.Count == 0)
+            {
+                TempData["Mensaje"] = $"No se encontraron productos con el nombre '{nombre}'.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("Index", resultado);
         }
 
-        private bool ProductoExists(string id)
+        // GET: mostrar el formulario de edición
+
+        public IActionResult Edit(string IdProd)
         {
-            return _context.Productos.Any(e => e.IdProd == id);
+            var current = _context.Productos.Find(IdProd);
+            if (current == null)
+            {
+                TempData["Mensaje"] = $"No se encontró el producto con el identificador {IdProd}.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(current);
+        }
+
+        // POST: guardar los cambios enviados desde la vista Edit
+        [HttpPost]
+        public IActionResult Edit(Producto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var existing = _context.Productos.Find(model.IdProd);
+            if (existing == null)
+            {
+                TempData["Mensaje"] = $"No se encontró el producto con el identificador {model.IdProd}.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Entry(existing).CurrentValues.SetValues(model); // Entry(r) = obtiene registro r | CurrentValues = valores actuales del registro | SetValues(m) = asigna los valores del modelo m
+            _context.SaveChanges();
+
+            TempData["Mensaje"] = $"Producto '{model.Nombre}' actualizado correctamente.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(string IdProd)
+        {
+            var producto = _context.Productos.Find(IdProd);
+
+            if (producto == null)
+            {
+                TempData["Mensaje"] = $"No se encontró la persona con cédula {IdProd}.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Productos.Remove(producto);
+            _context.SaveChanges();
+
+            TempData["Mensaje"] = $"{producto.Nombre} está ahora fuera del inventario.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Reportes y Estadísticas
+
+        public IActionResult OrderP()
+        {
+            var ordered = _context.Productos.OrderBy(p => p.Precio).ToList();
+            return View("Index", ordered);
+        }
+
+        public IActionResult AvgPrecio()
+        {
+            var avg = _context.Productos.Average(p => p.Precio);
+            TempData["Mensaje"] = $"El promedio del precio de los productos en inventario es de ₡ {avg:F2}";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ValInventario()
+        {
+            var totalValue = _context.Productos.Sum(p => p.Precio * p.Stock);
+            TempData["Mensaje"] = $"El valor total del inventario es de ₡ {totalValue:N2}";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ReStock()
+        {
+            var lowStockProducts = _context.Productos.Where(p => p.Stock < 5).ToList();
+            if (lowStockProducts.Count == 0)
+            {
+                TempData["Mensaje"] = "No hay productos con stock crítico (stock menor a 5).";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["Mensaje"] = "Productos que necesitan reabastecimiento (stock crítico, menor a 5):";
+            return View("Index", lowStockProducts);
         }
     }
 }

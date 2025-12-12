@@ -1,33 +1,44 @@
 ﻿@model TechSolutions.Models.Producto
-@{
-    //Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Agregar Producto";
+
+﻿@{
+    ViewData["Title"] = "Registrar Producto";
 }
+
+<h1>@ViewData["Title"]</h1>
 
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+    @* IdProducto *@
     <div class="mb-3">
         <label asp-for="IdProd" class="form-label"></label>
         <input asp-for="IdProd" class="form-control" />
         <span asp-validation-for="IdProd" class="text-danger"></span>
     </div>
+
+    @* nombre *@
     <div class="mb-3">
         <label asp-for="Nombre" class="form-label"></label>
         <input asp-for="Nombre" class="form-control" />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
+
+    @* Precio *@
     <div class="mb-3">
         <label asp-for="Precio" class="form-label"></label>
         <input asp-for="Precio" class="form-control" />
         <span asp-validation-for="Precio" class="text-danger"></span>
     </div>
+
+    @* Stock *@
     <div class="mb-3">
         <label asp-for="Stock" class="form-label"></label>
         <input asp-for="Stock" class="form-control" />
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+
+    <button type="submit" class="btn btn-success">Registrar</button>
+
+    <a class="btn btn-secondary" asp-action="Index">Volver</a>
 </form>
 
